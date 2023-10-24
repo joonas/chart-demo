@@ -37,5 +37,5 @@ jobs:
           if [ -z "${chart:-}" ]; then
             break
           fi
-          helm push "${chart}" "oci://ghcr.io/${{ github.repository_owner }}/demo-chart"
+          helm push "${chart}" "oci://ghcr.io/${{ github.repository_owner }}"
         done
