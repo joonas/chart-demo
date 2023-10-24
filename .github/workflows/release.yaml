@@ -1,0 +1,41 @@
+name: demo release
+
+on:
+  push:
+    branches:
+    - main
+  workflow_dispatch:
+
+jobs:
+  demo:
+    runs-on: ubuntu-22.04
+    permissions:
+      packages: write
+
+    steps:
+    - uses: actions/checkout@v4.1.1
+
+    - name: Set up Helm
+      uses: azure/setup-helm@v3.5
+      with:
+        version: v3.13.1
+
+    - name: Package
+      run: |
+        helm package chart -d .helm-charts
+
+    - name: Login to GHCR
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Publish
+      run: |
+        for chart in .helm-charts/*; do
+          if [ -z "${chart:-}" ]; then
+            break
+          fi
+          helm push "${chart}" "oci://ghcr.io/${{ github.repository_owner }}/demo-chart"
+        donea
