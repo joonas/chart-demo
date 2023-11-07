@@ -4,6 +4,10 @@ on:
   push:
     branches:
     - main
+    paths:
+    - 'chart/**'
+    - '!chart/artifacthub-repo.yml'
+    - '.github/workflows/release.yaml'
   workflow_dispatch:
 
 jobs:
